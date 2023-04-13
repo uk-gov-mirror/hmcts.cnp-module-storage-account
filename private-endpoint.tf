@@ -1,8 +1,6 @@
 provider "azurerm" {
-  count = var.private_endpoint_subscription_id != "" ? 1 : 0
-
   alias = "private_endpoints"
-  subscription_id = var.private_endpoint_subscription_id
+  subscription_id = ""//var.private_endpoint_subscription_id
   features {}
   skip_provider_registration = true
 }
@@ -13,7 +11,7 @@ resource "azurerm_private_endpoint" "this" {
   count = var.private_endpoint_subnet_id != "" ? 1 : 0
 
   // This should leave unspecified?
-  provider = azurerm.private_endpoints
+  //provider = azurerm.private_endpoints
   //provider = var.private_endpoint_subscription_id != "" ? azurerm.private_endpoints[0] : null
 
   name                = local.storage_account_name

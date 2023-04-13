@@ -1,6 +1,6 @@
 provider "azurerm" {
   alias = "private_endpoints"
-  subscription_id = ""//var.private_endpoint_subscription_id
+  subscription_id = var.private_endpoint_subscription_id
   features {}
   skip_provider_registration = true
 }

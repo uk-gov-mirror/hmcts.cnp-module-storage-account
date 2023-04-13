@@ -11,7 +11,7 @@ resource "azurerm_private_endpoint" "this" {
   count = var.private_endpoint_subnet_id != "" ? 1 : 0
 
   // This should leave unspecified?
-  //provider = azurerm.private_endpoints
+  provider = azurerm.private_endpoints
   //provider = var.private_endpoint_subscription_id != "" ? azurerm.private_endpoints[0] : null
 
   name                = local.storage_account_name

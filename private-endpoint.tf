@@ -2,7 +2,7 @@ provider "azurerm" {
   alias = "private_endpoints"
   subscription_id = var.private_endpoint_subscription_id
   features {}
-  skip_provider_registration = true
+  resource_provider_registrations = "none"
 }
 
 # TODO make a breaking change at some point to automatically default a subnet id like in:

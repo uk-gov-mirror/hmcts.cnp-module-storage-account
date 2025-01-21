@@ -84,7 +84,7 @@ provider "azurerm" {
   alias           = "private_endpoints"
   subscription_id = var.aks_subscription_id
   features {}
-  skip_provider_registration = true
+  resource_provider_registrations = "none"
 }
 
 data "azurerm_subnet" "private_endpoints" {

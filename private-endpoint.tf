@@ -22,3 +22,26 @@ resource "azurerm_private_endpoint" "this" {
 
   tags = var.common_tags
 }
+
+resource "azurerm_private_endpoint" "dfs_endpoint" {
+  count = (var.private_endpoint_subnet_id != "" && var.create_dfs_private_endpoint) ? 1 : 0
+
+  name                = "${local.storage_account_name}-dfs"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  subnet_id           = var.private_endpoint_subnet_id
+
+  private_service_connection {
+    name                           = "${local.storage_account_name}-dfs"
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_storage_account.storage_account.id
+    subresource_names              = ["dfs"]
+  }
+
+  private_dns_zone_group {
+    name                 = "dfs-dnszonegroup"
+    private_dns_zone_ids = ["/subscriptions/1baf5470-1c3e-40d3-a6f7-74bfbce4b348/resourceGroups/core-infra-intsvc-rg/providers/Microsoft.Network/privateDnsZones/privatelink.dfs.core.windows.net"]
+  }
+
+  tags = var.common_tags
+}

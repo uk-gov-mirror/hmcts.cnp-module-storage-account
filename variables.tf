@@ -178,6 +178,12 @@ variable "private_endpoint_subnet_id" {
   default     = ""
 }
 
+variable "create_dfs_private_endpoint" {
+  description = "Boolean flag to enable or disable DFS private endpoint"
+  type        = bool
+  default     = false
+}
+
 variable "enable_change_feed" {
   default = "false"
 }

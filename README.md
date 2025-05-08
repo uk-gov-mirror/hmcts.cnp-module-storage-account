@@ -233,6 +233,7 @@ module "this" {
 |------|---------|
 | <a name="provider_azapi"></a> [azapi](#provider\_azapi) | n/a |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
+| <a name="provider_azurerm.private_endpoints"></a> [azurerm.private\_endpoints](#provider\_azurerm.private\_endpoints) | n/a |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 | <a name="provider_time"></a> [time](#provider\_time) | n/a |
 
@@ -242,6 +243,7 @@ module "this" {
 |------|------|
 | [azapi_update_resource.defender_settings](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/update_resource) | resource |
 | [azurerm_pim_eligible_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/pim_eligible_role_assignment) | resource |
+| [azurerm_private_endpoint.dfs_endpoint](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) | resource |
 | [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) | resource |
 | [azurerm_role_assignment.storage-account-role-assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_storage_account.storage_account](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account) | resource |
@@ -266,8 +268,10 @@ module "this" {
 | <a name="input_account_tier"></a> [account\_tier](#input\_account\_tier) | Defines the Tier to use for this storage account. Valid options are Standard and Premium. Changing this forces a new resource to be created | `string` | `"Standard"` | no |
 | <a name="input_allow_nested_items_to_be_public"></a> [allow\_nested\_items\_to\_be\_public](#input\_allow\_nested\_items\_to\_be\_public) | (Optional) Allow or disallow public access to all blobs or containers in the storage account. Defaults to false. | `string` | `"false"` | no |
 | <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | TAG SPECIFIC VARIABLES | `map(string)` | n/a | yes |
-| <a name="input_containers"></a> [containers](#input\_containers) | List of Storage Containers | <pre>list(object({<br>    name        = string<br>    access_type = string<br>  }))</pre> | `[]` | no |
-| <a name="input_cors_rules"></a> [cors\_rules](#input\_cors\_rules) | (Optional) A list of Cors Rule blocks. See https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#cors_rule | <pre>list(object({<br>    allowed_headers    = list(string)<br>    allowed_methods    = list(string)<br>    allowed_origins    = list(string)<br>    exposed_headers    = list(string)<br>    max_age_in_seconds = number<br>  }))</pre> | `[]` | no |
+| <a name="input_containers"></a> [containers](#input\_containers) | List of Storage Containers | <pre>list(object({<br/>    name        = string<br/>    access_type = string<br/>  }))</pre> | `[]` | no |
+| <a name="input_cors_rules"></a> [cors\_rules](#input\_cors\_rules) | (Optional) A list of Cors Rule blocks. See https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#cors_rule | <pre>list(object({<br/>    allowed_headers    = list(string)<br/>    allowed_methods    = list(string)<br/>    allowed_origins    = list(string)<br/>    exposed_headers    = list(string)<br/>    max_age_in_seconds = number<br/>  }))</pre> | `[]` | no |
+| <a name="input_create_dfs_private_endpoint"></a> [create\_dfs\_private\_endpoint](#input\_create\_dfs\_private\_endpoint) | Boolean flag to enable or disable DFS private endpoint | `bool` | `false` | no |
+| <a name="input_cross_tenant_replication_enabled"></a> [cross\_tenant\_replication\_enabled](#input\_cross\_tenant\_replication\_enabled) | (Optional) Should cross Tenant replication be enabled | `bool` | `false` | no |
 | <a name="input_default_action"></a> [default\_action](#input\_default\_action) | (Optional) Network rules default action | `string` | `"Deny"` | no |
 | <a name="input_defender_enabled"></a> [defender\_enabled](#input\_defender\_enabled) | Enable Defender for Cloud, it costs $10per month / storage account and $0.15/GB scanned for On-Upload Malware Scanning, enable with caution | `bool` | `false` | no |
 | <a name="input_defender_malware_scanning_cap_gb_per_month"></a> [defender\_malware\_scanning\_cap\_gb\_per\_month](#input\_defender\_malware\_scanning\_cap\_gb\_per\_month) | Maximum amount of data scanned per month in GB, it costs $0.15/GB scanned | `number` | `5000` | no |
@@ -290,9 +294,11 @@ module "this" {
 | <a name="input_ip_rules"></a> [ip\_rules](#input\_ip\_rules) | (Optional) List of public IP addresses which will have access to storage account. | `list(string)` | `[]` | no |
 | <a name="input_location"></a> [location](#input\_location) | (Required) Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created. | `string` | `"uksouth"` | no |
 | <a name="input_managed_identity_object_id"></a> [managed\_identity\_object\_id](#input\_managed\_identity\_object\_id) | (Optional) Object Id for a Managed Identity to assign roles to, scoped to this storage account. | `string` | `""` | no |
-| <a name="input_pim_roles"></a> [pim\_roles](#input\_pim\_roles) | { 'Role name' = { principal\_id = 'principal\_id' } }, only certain roles are supported | <pre>map(object({<br>    principal_id = string<br>  }))</pre> | `{}` | no |
-| <a name="input_policy"></a> [policy](#input\_policy) | Storage Account Managment Policy | <pre>list(object({<br>    name = string<br>    filters = object({<br>      prefix_match = list(string)<br>      blob_types   = list(string)<br>    })<br>    actions = object({<br>      version_delete_after_days_since_creation = number<br>    })<br>  }))</pre> | `[]` | no |
+| <a name="input_pim_roles"></a> [pim\_roles](#input\_pim\_roles) | { 'Role name' = { principal\_id = 'principal\_id' } }, only certain roles are supported | <pre>map(object({<br/>    principal_id = string<br/>  }))</pre> | `{}` | no |
+| <a name="input_policy"></a> [policy](#input\_policy) | Storage Account Managment Policy | <pre>list(object({<br/>    name = string<br/>    filters = object({<br/>      prefix_match = list(string)<br/>      blob_types   = list(string)<br/>    })<br/>    actions = object({<br/>      version_delete_after_days_since_creation = number<br/>    })<br/>  }))</pre> | `[]` | no |
+| <a name="input_private_endpoint_rg_name"></a> [private\_endpoint\_rg\_name](#input\_private\_endpoint\_rg\_name) | Resource group to deploy the private endpoint to - overrides the default resource group name | `string` | `""` | no |
 | <a name="input_private_endpoint_subnet_id"></a> [private\_endpoint\_subnet\_id](#input\_private\_endpoint\_subnet\_id) | Subnet ID to attach private endpoint to - overrides the default subnet id | `string` | `""` | no |
+| <a name="input_private_endpoint_subscription_id"></a> [private\_endpoint\_subscription\_id](#input\_private\_endpoint\_subscription\_id) | Subscription to deploy the private endpoint to - overrides the default subscription id | `string` | `""` | no |
 | <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled) | (Optional) Defaults to null. Setting this to false will block public access to the storage account. See https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account#public_network_access_enabled | `bool` | `null` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | This is the prefix your resource group name will have for your shared infrastructure | `string` | n/a | yes |
 | <a name="input_restore_policy_days"></a> [restore\_policy\_days](#input\_restore\_policy\_days) | n/a | `any` | `null` | no |

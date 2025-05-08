@@ -180,12 +180,18 @@ variable "private_endpoint_subnet_id" {
 
 variable "private_endpoint_rg_name" {
   description = "Resource group to deploy the private endpoint to - overrides the default resource group name"
-  default = ""
+  default     = ""
 }
 
 variable "private_endpoint_subscription_id" {
   description = "Subscription to deploy the private endpoint to - overrides the default subscription id"
-  default = ""
+  default     = ""
+}
+
+variable "create_dfs_private_endpoint" {
+  description = "Boolean flag to enable or disable DFS private endpoint"
+  type        = bool
+  default     = false
 }
 
 variable "enable_change_feed" {

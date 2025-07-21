@@ -11,7 +11,8 @@ locals {
   allowed_roles = [
     "Storage Blob Delegator",
     "Storage Blob Data Contributor",
-    "Storage Blob Data Reader"
+    "Storage Blob Data Reader",
+    "Azure Storage Account Blob Tagging"
   ]
 
   role_assignments = [
